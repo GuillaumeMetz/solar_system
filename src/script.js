@@ -136,6 +136,7 @@ const saturnring = new THREE.Mesh(
 saturnObj.add(saturnring);
 saturnring.position.x=8.5;
 saturnring.rotation.x= -0.5*Math.PI;
+saturnring.rotation.y= 0.2;
 
 const uranus = new THREE.Mesh(
     new THREE.SphereGeometry(0.6, 32, 32),
