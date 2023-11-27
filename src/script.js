@@ -41,12 +41,13 @@ const jupiterTexture = textureLoader.load('/textures/jupitermap.png')
 const saturnTexture = textureLoader.load('/textures/saturnmap.png')
 const saturnringTexture = textureLoader.load('/textures/saturnring.png')
 const uranusTexture = textureLoader.load('/textures/uranusmap.png')
+const uranusringTexture = textureLoader.load('/textures/uranusringmap.png')
 const neptuneTexture = textureLoader.load('/textures/neptunemap.png')
 const sunTexture = textureLoader.load('/textures/sunmap.png')
 const moonTexture = textureLoader.load('/textures/moonmap.png')
 
 /**
- * Objects 
+ * Objects
  */
 const earthmaterial = new THREE.MeshStandardMaterial({map: earthTexture})
 const mercurymaterial = new THREE.MeshStandardMaterial({map: mercuryTexture})
@@ -56,6 +57,7 @@ const jupitermaterial = new THREE.MeshStandardMaterial({map: jupiterTexture})
 const saturnmaterial = new THREE.MeshStandardMaterial({map: saturnTexture})
 const saturnringmaterial = new THREE.MeshBasicMaterial({map: saturnringTexture, side: THREE.DoubleSide})
 const uranusmaterial = new THREE.MeshStandardMaterial({map: uranusTexture})
+const uranusringmaterial = new THREE.MeshBasicMaterial({map: uranusringTexture, side: THREE.DoubleSide})
 const neptunematerial = new THREE.MeshStandardMaterial({map: neptuneTexture})
 const sunmaterial = new THREE.MeshBasicMaterial({map: sunTexture})
 const moonmaterial = new THREE.MeshStandardMaterial({map: moonTexture})
@@ -118,7 +120,7 @@ const jupiter = new THREE.Mesh(
 const jupiterObj = new THREE.Object3D();
 jupiterObj.add(jupiter);
 scene.add(jupiterObj);
-jupiter.position.x=6.3;
+jupiter.position.x=8.3;
 
 const saturn = new THREE.Mesh(
     new THREE.SphereGeometry(0.8, 32, 32),
@@ -127,14 +129,14 @@ const saturn = new THREE.Mesh(
 const saturnObj = new THREE.Object3D();
 saturnObj.add(saturn);
 scene.add(saturnObj);
-saturn.position.x=8.5;
+saturn.position.x=10.5;
 
 const saturnring = new THREE.Mesh(
     new THREE.RingGeometry(0.9, 1.1, 32),
     saturnringmaterial
 )
 saturnObj.add(saturnring);
-saturnring.position.x=8.5;
+saturnring.position.x=10.5;
 saturnring.rotation.x= -0.5*Math.PI;
 saturnring.rotation.y= 0.2;
 
@@ -145,7 +147,16 @@ const uranus = new THREE.Mesh(
 const uranusObj = new THREE.Object3D();
 uranusObj.add(uranus);
 scene.add(uranusObj);
-uranus.position.x=10.5;
+uranus.position.x=12.5;
+
+const uranusring = new THREE.Mesh(
+    new THREE.RingGeometry(0.9, 1, 32),
+    uranusringmaterial
+)
+uranusObj.add(uranusring);
+uranusring.position.x=12.5;
+uranusring.rotation.x= -0.5*Math.PI;
+uranusring.rotation.y= 0.2;
 
 const neptune = new THREE.Mesh(
     new THREE.SphereGeometry(0.6, 32, 32),
@@ -154,7 +165,7 @@ const neptune = new THREE.Mesh(
 const neptuneObj = new THREE.Object3D();
 neptuneObj.add(neptune);
 scene.add(neptuneObj);
-neptune.position.x=12;
+neptune.position.x=14;
 
 const mercuretraj = new THREE.Mesh(
     new THREE.TorusGeometry(1.5, 0.01, 128,64),
@@ -185,28 +196,28 @@ sun.add(marstraj);
 marstraj.rotation.x= -0.5*Math.PI;
 
 const jupitertraj = new THREE.Mesh(
-    new THREE.TorusGeometry(6.3, 0.01, 128,64),
+    new THREE.TorusGeometry(8.3, 0.01, 128,64),
     trajmaterial
 )
 sun.add(jupitertraj);
 jupitertraj.rotation.x= -0.5*Math.PI;
 
 const saturntraj = new THREE.Mesh(
-    new THREE.TorusGeometry(8.5, 0.01, 128,64),
+    new THREE.TorusGeometry(10.5, 0.01, 128,64),
     trajmaterial
 )
 sun.add(saturntraj);
 saturntraj.rotation.x= -0.5*Math.PI;
 
 const uranustraj = new THREE.Mesh(
-    new THREE.TorusGeometry(10.5, 0.01, 128,64),
+    new THREE.TorusGeometry(12.5, 0.01, 128,64),
     trajmaterial
 )
 sun.add(uranustraj);
 uranustraj.rotation.x= -0.5*Math.PI;
 
 const neptunetraj = new THREE.Mesh(
-    new THREE.TorusGeometry(12, 0.01, 128,64),
+    new THREE.TorusGeometry(14, 0.01, 128,64),
     trajmaterial
 )
 sun.add(neptunetraj);
@@ -234,6 +245,33 @@ starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsVer
 
 const stars = new THREE.Points(starsGeometry, starsMaterial)
 scene.add(stars)
+
+/**
+ * Asteroids
+ */
+const asteroidGroup = new THREE.Group();
+scene.add(asteroidGroup);
+
+const asteroidMaterial = new THREE.MeshStandardMaterial({ color: 0x888888 });
+
+for (let i = 0; i < 1000; i++) {
+    const radius = Math.random() * 0.05 + 0.02;
+    const angle = Math.random() * Math.PI * 2;
+    const distance = Math.random() + 6;
+
+    const asteroid = new THREE.Mesh(
+        new THREE.SphereGeometry(radius, 8, 8),
+        asteroidMaterial
+    );
+
+    const x = Math.cos(angle) * distance;
+    const y = (Math.random() - 0.5) * 0.5; // Random height between -0.25 and 0.25
+    const z = Math.sin(angle) * distance;
+
+    asteroid.position.set(x, y, z);
+
+    asteroidGroup.add(asteroid);
+}
 
 
 /**
