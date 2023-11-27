@@ -1,6 +1,5 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import {texture} from "three/addons/nodes/accessors/TextureNode.js";
 
 
 /**
@@ -34,7 +33,6 @@ loadingManager.onError = ()=> {
     console.log('loading error')
 }
 const textureLoader = new THREE.TextureLoader(loadingManager)
-const galaxyTexture = textureLoader.load('/textures/galaxy1.png')
 const earthTexture = textureLoader.load('/textures/earthmap.png')
 const mercuryTexture = textureLoader.load('/textures/mercurymap.png')
 const venusTexture = textureLoader.load('/textures/venusmap.png')
@@ -50,7 +48,6 @@ const moonTexture = textureLoader.load('/textures/moonmap.png')
 /**
  * Objects 
  */
-const galaxymaterial = new THREE.MeshBasicMaterial({map: galaxyTexture})
 const earthmaterial = new THREE.MeshStandardMaterial({map: earthTexture})
 const mercurymaterial = new THREE.MeshStandardMaterial({map: mercuryTexture})
 const venusmaterial = new THREE.MeshStandardMaterial({map: venusTexture})
@@ -112,7 +109,7 @@ const mars = new THREE.Mesh(
 const marsObj = new THREE.Object3D();
 marsObj.add(mars);
 scene.add(marsObj);
-mars.position.x=4.5;
+mars.position.x=4.9;
 
 const jupiter = new THREE.Mesh(
     new THREE.SphereGeometry(0.8, 32, 32),
@@ -158,14 +155,6 @@ neptuneObj.add(neptune);
 scene.add(neptuneObj);
 neptune.position.x=12;
 
-const plane = new THREE.Mesh(
-    new THREE.PlaneGeometry(40, 40),
-    galaxymaterial
-)
-plane.rotation.x = - Math.PI * 0.5
-plane.position.y = - 2
-scene.add(plane)
-
 const mercuretraj = new THREE.Mesh(
     new THREE.TorusGeometry(1.5, 0.01, 128,64),
     trajmaterial
@@ -188,7 +177,7 @@ sun.add(earthtraj);
 earthtraj.rotation.x= -0.5*Math.PI;
 
 const marstraj = new THREE.Mesh(
-    new THREE.TorusGeometry(4.5, 0.01, 128,64),
+    new THREE.TorusGeometry(4.9, 0.01, 128,64),
     trajmaterial
 )
 sun.add(marstraj);
@@ -223,9 +212,33 @@ sun.add(neptunetraj);
 neptunetraj.rotation.x= -0.5*Math.PI;
 
 /**
+ * Stars
+ */
+const starsGeometry = new THREE.BufferGeometry()
+const starsMaterial = new THREE.PointsMaterial({ color: 0xFFFFFF, size: 0.1 })
+
+const starsVertices = []
+for (let i = 0; i < 5000; i++) {
+    let x, y, z
+    do {
+        x = (Math.random() - 0.5) * 200
+        y = (Math.random() - 0.5) * 200
+        z = (Math.random() - 0.5) * 200
+    } while (Math.sqrt(x ** 2 + y ** 2 + z ** 2) < 20)
+
+    starsVertices.push(x, y, z)
+}
+
+starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsVertices, 3))
+
+const stars = new THREE.Points(starsGeometry, starsMaterial)
+scene.add(stars)
+
+
+/**
  *  Lights
  */
-const pointLight = new THREE.PointLight(0xffffff, 50,600)
+const pointLight = new THREE.PointLight(0xffffff, 30,600)
 scene.add(pointLight)
 
 /**
@@ -290,19 +303,19 @@ const tick = () =>
     earth.rotation.y=elapsedTime*0.5
     earthObj.rotation.y=elapsedTime*1
     mercury.rotation.y=elapsedTime*0.8
-    mercuryObj.rotation.y=elapsedTime*2
+    mercuryObj.rotation.y=elapsedTime*5
     venus.rotation.y=elapsedTime*0.7
     venusObj.rotation.y=elapsedTime*1.8
     mars.rotation.y=elapsedTime*0.2
-    marsObj.rotation.y=elapsedTime*0.9
+    marsObj.rotation.y=elapsedTime*0.7
     jupiter.rotation.y=elapsedTime*0.15
-    jupiterObj.rotation.y=elapsedTime*0.6
+    jupiterObj.rotation.y=elapsedTime*0.4
     saturn.rotation.y=elapsedTime*0.13
-    saturnObj.rotation.y=elapsedTime*0.5
+    saturnObj.rotation.y=elapsedTime*0.3
     uranus.rotation.y=elapsedTime*0.11
-    uranusObj.rotation.y=elapsedTime*0.45
+    uranusObj.rotation.y=elapsedTime*0.2
     neptune.rotation.y=elapsedTime*0.08
-    neptuneObj.rotation.y=elapsedTime*0.35
+    neptuneObj.rotation.y=elapsedTime*0.1
 
 
 
